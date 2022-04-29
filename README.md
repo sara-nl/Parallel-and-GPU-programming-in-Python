@@ -18,7 +18,7 @@ You should have:
 
 ## Schedule
 
-### Day 1:
+### Day 1 (CPU):
 
 - (09:30 to 10:00) Welcome and Introduction to the Course
 - (10:00 to 11:00) Introduction to Python and Parallel Computing
