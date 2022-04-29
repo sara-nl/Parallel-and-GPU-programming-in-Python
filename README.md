@@ -14,3 +14,18 @@ In this course you will:
 - Basic knowledge of Python and use of Jupyter notebooks
 You should have:
 - Your own laptop with an up-to-date browser and a terminal emulator. The use of the operating systems Linux and macOS is preferred, but not mandatory. For Windows users we recommend to download MobaXterm (portable version) as terminal emulator.
+
+
+## Schedule
+
+### Day 1:
+
+- (09:30 to 10:00) Welcome and Introduction to the Course
+- (10:00 to 11:00) Introduction to Python and Parallel Computing
+- (11:00 to 11:15) Coffee Break
+- (11:15 to 12:30) Hands-on: Inroduction to Python and Parallel Programming (threading)
+- (12:30 to 13:30) Lunch
+- (13:30 to 15:00) Parallel Programming with Python (multiprocess)
+- (15:00 to 15:15) Coffee Break
+- (15:15 to 17:00) Parallel Programming with Pythin (Mpi4Py)
+
