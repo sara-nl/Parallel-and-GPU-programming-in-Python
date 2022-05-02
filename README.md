@@ -20,7 +20,7 @@ You should have:
 
 ### Day 1 (CPU):
 
-- (09:30 to 10:00) Welcome and Introduction to the Course
+- (09:00 to 10:00) Welcome and Introduction to the Course
 - (10:00 to 11:00) Introduction to Python and Parallel Computing
 - (11:00 to 11:15) Coffee Break
 - (11:15 to 12:30) Hands-on: Inroduction to Python and Parallel Programming (threading)
