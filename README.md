@@ -23,7 +23,7 @@ You should have:
 - (09:00 to 10:00) Welcome and Introduction to the Course
 - (10:00 to 11:00) Introduction to Python and Parallel Computing
 - (11:00 to 11:15) Coffee Break
-- (11:15 to 12:30) Hands-on: Inroduction to Python and Parallel Programming (threading/multiprocess)
+- (11:15 to 12:30) Hands-on: Introduction to Python and Parallel Programming (threading/multiprocess)
 - (12:30 to 13:30) Lunch
 - (13:30 to 15:00) Parallel Programming with Python (Mpi4Py)
 - (15:00 to 15:15) Coffee Break
