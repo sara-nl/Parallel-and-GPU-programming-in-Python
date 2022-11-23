@@ -31,4 +31,12 @@ You should have:
 
 ### Day 2 (GPU):
 
-
+- (09:30 to 10:30) Welcome and Introduction to the Course
+- (10:30 to 10:45) Coffee Break
+- (10:45 to 12:00) Introduction to PyCUDA
+- (12:00 to 13:00) Lunch
+- (13:00 to 14:30) Hands-on: PyCUDA examples
+- (14:30 to 14:45) Coffee Break
+- (14:45 to 16:00) Hands-on: PyCUDA examples
+- (16:00 to 16:15) Coffee Break
+- (16:15 to 17:00) PyCUDA optimization and correctness 
