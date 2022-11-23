@@ -21,13 +21,13 @@ You should have:
 ### Day 1 (CPU):
 
 - (09:00 to 10:00) Welcome and Introduction to the Course
-- (10:00 to 11:00) Introduction to Python and Parallel Computing
-- (11:00 to 11:15) Coffee Break
-- (11:15 to 12:30) Hands-on: Introduction to Python and Parallel Programming (threading/multiprocess)
-- (12:30 to 13:30) Lunch
-- (13:30 to 15:00) Parallel Programming with Python (Mpi4Py)
-- (15:00 to 15:15) Coffee Break
-- (15:15 to 17:00) Hands-on:
+- (10:00 to 10:45) Introduction to Python and Parallel Computing
+- (10:45 to 11:00) Coffee Break
+- (11:00 to 12:00) Hands-on: Introduction to Python and Parallel Programming (threading/multiprocess)
+- (12:00 to 13:00) Lunch
+- (13:00 to 14:45) Parallel Programming with Python (Mpi4Py)
+- (14:45 to 15:00) Coffee Break
+- (15:00 to 17:00) Hands-on:
 
 ### Day 2 (GPU):
 
