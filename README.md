@@ -20,23 +20,17 @@ You should have:
 
 ### Day 1 (CPU):
 
-- (09:00 to 10:00) Welcome and Introduction to the Course
-- (10:00 to 10:45) Introduction to Python and Parallel Computing
-- (10:45 to 11:00) Coffee Break
-- (11:00 to 12:00) Hands-on: Introduction to Python and Parallel Programming (threading/multiprocess)
-- (12:00 to 13:00) Lunch
-- (13:00 to 14:45) Parallel Programming with Python (Mpi4Py)
-- (14:45 to 15:00) Coffee Break
-- (15:00 to 17:00) Hands-on:
+- (10:00 to 11:00) Introduction to Python and Parallel Computing
+- (11:00 to 11:15) Coffee Break
+- (11:15 to 12:30) Hands-on: Introduction to Python and Parallel Programming (threading/multiprocess)
+- (12:30 to 13:00) Lunch
+- (13:30 to 15:00) Parallel Programming with Python (Profiling, Numba)
 
 ### Day 2 (GPU):
 
-- (09:30 to 10:30) Welcome and Introduction to the Course
-- (10:30 to 10:45) Coffee Break
+- (10:00 to 10:15) Welcome and Introduction to the Course
+- (10:15 to 10:30) Coffee Break
 - (10:45 to 12:00) Introduction to PyCUDA
 - (12:00 to 13:00) Lunch
-- (13:00 to 14:30) Hands-on: PyCUDA examples
-- (14:30 to 14:45) Coffee Break
-- (14:45 to 16:00) Hands-on: PyCUDA examples
-- (16:00 to 16:15) Coffee Break
-- (16:15 to 17:00) PyCUDA optimization and correctness 
+- (13:00 to 15:00) Hands-on: PyCUDA examples
+
