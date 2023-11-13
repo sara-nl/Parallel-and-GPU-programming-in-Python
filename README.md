@@ -5,7 +5,7 @@ In this course you will learn about parallel programming using Python, a languag
 ### What?
 In this course you will:
 - Understand the limits and merits of parallel programming and its use with Python
-- Implement code using different libraries for parallel programming on CPU and GPU, including PyCUDA or mpi4py.
+- Implement code using different libraries for parallel programming on CPU and GPU, including concurrent.futures (threads and process), Numba, and PyCUDA.
 - Experience how to achieve high performance with Python using the supercomputing facilities at SURF
 ### Who?
 - Everyone interested in learning how to get high performance for Python codes
