@@ -24,7 +24,9 @@ You should have:
 - (11:00 to 11:15) Coffee Break
 - (11:15 to 12:30) Hands-on: Introduction to Python and Parallel Programming (threading/multiprocess)
 - (12:30 to 13:00) Lunch
-- (13:30 to 15:00) Parallel Programming with Python (Profiling, Numba)
+- (13:00 to 13:45) Hands-on (Threads, Processes)
+- (13:45 to 14:00) Coffee Break
+- (14:00 to 15:00) Hands-on (Numba, Profiling)
 
 ### Day 2 (GPU):
 
