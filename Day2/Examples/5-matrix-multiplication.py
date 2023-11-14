@@ -6,7 +6,7 @@ import numpy as np
 import time 
 
 # Array size
-N = 2000
+N = 500
 
 # Create some space on CPU/HOST (random 32-bit ints)
 a_cpu = np.random.uniform(1.0, 100.0, size=(N,N)).astype(np.uint32) 
@@ -46,12 +46,13 @@ func(cuda.In(a_cpu), cuda.In(b_cpu), cuda.Out(c_cpu), np.uint32(N), grid=(grid_s
 
 # End GPU timing
 end0.record()
+cuda.Context.synchronize()
 sec = start0.time_till(end0)*1e-3
 print("Elapsed time using GPU: ", sec)
 print("---------------------")
 
 ##############################################################
-'''
+
 # Sequesntial addition
 c_seq = np.zeros((N,N), np.uint32)
 start1 = time.time()
@@ -62,30 +63,32 @@ for i in range(N):
 end1 = time.time()
 print("Elapsed time using sequential for-loop: ", end1-start1)
 print("---------------------")
-'''
+
 
 #############################################################
 # Numpy addition
+'''
 start2 = time.time()
 c_np = np.matmul(a_cpu, b_cpu)
 end2 = time.time()
 print("Elapsed time using sequential numpy func: ", end2-start2)
 print("---------------------")
-
+'''
 #############################################################
 # Simple addition
+'''
 start3 = time.time()
 c_simp = a_cpu @ b_cpu
 end3 = time.time()
 print("Elapsed time using sequential @ operator: ", end3-start3)
 print("---------------------")
-
+'''
 #############################################################
 # Validation
 dif = 0
 for i in range(N):
 	for j in range(N):
-		if(c_cpu[i][j] != c_np[i][j]):
+		if(c_cpu[i][j] != c_seq[i][j]):
 			dif += 1
 print ("Validation: there are %d different element(s)!" %dif)
 print("---------------------")

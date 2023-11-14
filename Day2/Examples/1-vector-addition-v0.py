@@ -54,6 +54,7 @@ cuda.memcpy_dtoh(c_cpu, c_gpu)
 
 # End GPU timing
 end0.record()
+cuda.Context.synchronize()
 sec = start0.time_till(end0)*1e-3
 print("Elapsed time using GPU: ", sec)
 print("---------------------")

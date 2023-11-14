@@ -54,6 +54,7 @@ func(cuda.InOut(a_cpu), cuda.InOut(total_gpu), grid=(grid_size, 1, 1), block=(bl
 
 # End GPU timing
 end0.record()
+cuda.Context.synchronize()
 sec = start0.time_till(end0)*1e-3
 print("Elapsed time using GPU (sec): ", sec)
 print("total: ", total_gpu[0])
