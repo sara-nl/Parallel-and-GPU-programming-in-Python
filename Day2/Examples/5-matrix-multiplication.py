@@ -5,21 +5,20 @@ from pycuda.compiler import SourceModule
 import numpy as np
 import time 
 
-# Array size
-N = 500
+#################### Array size
+N = 400
 
-# Create some space on CPU/HOST (random 32-bit ints)
+#################### Create some space on CPU/HOST (random 32-bit ints)
 a_cpu = np.random.uniform(1.0, 100.0, size=(N,N)).astype(np.uint32) 
 b_cpu = np.random.uniform(1.0, 100.0, size=(N,N)).astype(np.uint32)
 c_cpu = np.zeros((N,N), np.uint32)
 
-##########################################################
-# Satrt GPU timing
-start0 = cuda.Event()
-end0 = cuda.Event()
-start0.record()
+#################### Satrt GPU timing
+start_gpu = cuda.Event()
+end_gpu = cuda.Event()
+start_gpu.record()
 
-# Write a GPU kernel
+#################### Write a GPU kernel
 module = SourceModule(""" 
 	__global__ void multiplication(int* a_gpu, int* b_gpu, int* c_gpu, int N){
 		// Global thread indices
@@ -37,54 +36,50 @@ module = SourceModule("""
 
 """)
 
-
-# Launch the GPU kernel
+#################### Launch the GPU kernel
 func = module.get_function("multiplication")
 block_size = 32
 grid_size = int(np.ceil(N/block_size))
 func(cuda.In(a_cpu), cuda.In(b_cpu), cuda.Out(c_cpu), np.uint32(N), grid=(grid_size, grid_size, 1), block=(block_size, block_size, 1))
 
-# End GPU timing
-end0.record()
+#################### End GPU timing
+end_gpu.record()
 cuda.Context.synchronize()
-sec = start0.time_till(end0)*1e-3
-print("Elapsed time using GPU: ", sec)
+gpu_time = start_gpu.time_till(end_gpu)*1e-3
+print("Elapsed time using GPU (sec): ", gpu_time)
 print("---------------------")
 
-##############################################################
-
-# Sequesntial addition
+#################### Sequesntial multiplication
 c_seq = np.zeros((N,N), np.uint32)
-start1 = time.time()
+start_cpu_seq = time.time()
 for i in range(N):
 	for j in range(N):
 		for k in range(N):
 			c_seq[i][j] += a_cpu[i][k] * b_cpu[k][j]
-end1 = time.time()
-print("Elapsed time using sequential for-loop: ", end1-start1)
+end_cpu_seq = time.time()
+cpu_time_seq = end_cpu_seq - start_cpu_seq
+print("Elapsed time using sequential for-loop (sec): ", cpu_time_seq)
 print("---------------------")
 
-
-#############################################################
-# Numpy addition
+#################### Numpy multiplication
 '''
-start2 = time.time()
+start_cpu_np = time.time()
 c_np = np.matmul(a_cpu, b_cpu)
-end2 = time.time()
-print("Elapsed time using sequential numpy func: ", end2-start2)
+end_cpu_np = time.time()
+cpu_time_np = end_cpu_np - start_cpu_np
+print("Elapsed time using sequential numpy func (sec): ", cpu_time_np)
 print("---------------------")
 '''
-#############################################################
-# Simple addition
+#################### The @ operator multiplication
 '''
-start3 = time.time()
-c_simp = a_cpu @ b_cpu
-end3 = time.time()
-print("Elapsed time using sequential @ operator: ", end3-start3)
+start_cpu_op = time.time()
+c_op = a_cpu @ b_cpu
+end_cpu_op = time.time()
+cpu_time_op = end_cpu_op - start_cpu_op
+print("Elapsed time using sequential @ operator (sec): ", cpu_time_op)
 print("---------------------")
 '''
-#############################################################
-# Validation
+#################### Validation
 dif = 0
 for i in range(N):
 	for j in range(N):
