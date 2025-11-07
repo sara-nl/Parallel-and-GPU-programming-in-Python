@@ -1,3 +1,4 @@
+#Vector Addition with Pycuda(GPU) and Numpy(CPU)
 # Import and Initialize PyCUDA
 import pycuda.driver as cuda
 import pycuda.autoinit
@@ -45,7 +46,7 @@ gpu_time = start_gpu.time_till(end_gpu)*1e-3
 print("Elapsed time using GPU (sec): ", gpu_time)
 print("---------------------")
 
-#################### Sequesntial addition
+#################### Sequential addition
 c_seq = np.zeros(N, np.uint32)
 start_cpu = time.time()
 for i in range(N):
