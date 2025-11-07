@@ -1,3 +1,4 @@
+#Vector Addition with Pycuda(GPU) and Numpy(CPU)
 # Import and Initialize PyCUDA
 import pycuda.driver as cuda
 import pycuda.autoinit
@@ -18,7 +19,7 @@ a_gpu = cuda.mem_alloc(a_cpu.nbytes)
 b_gpu = cuda.mem_alloc(b_cpu.nbytes)
 c_gpu = cuda.mem_alloc(c_cpu.nbytes) 
 
-#################### Satrt GPU timing
+#################### Start GPU timing
 start_gpu = cuda.Event()
 end_gpu = cuda.Event()
 start_gpu.record()
