@@ -76,4 +76,3 @@ for i in range(N):
 		dif += 1
 print ("Validation: there are %d different element(s)! " %dif)
 print("---------------------")
-
