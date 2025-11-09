@@ -1,4 +1,4 @@
-#Vector Addition with Pycuda(GPU) and Numpy(CPU). Optimized in/out
+#Vector Addition with Pycuda(GPU) and Numpy(CPU). Optimized in/out.
 # Import and Initialize PyCUDA, numpy, and numba
 import pycuda.driver as cuda
 import pycuda.autoinit
