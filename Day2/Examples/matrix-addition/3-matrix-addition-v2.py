@@ -1,4 +1,5 @@
 # Matrix Addition with Numba CUDA (GPU) and Numba (CPU)
+# Import and Initialize numpy, time, and numba
 import numpy as np
 import time
 from numba import cuda, njit, prange
@@ -52,17 +53,20 @@ def add_matrices_parallel(a, b, c):
             c[i, j] = a[i, j] + b[i, j]
     return c
 
-#################### Launch Numba CPU version
+#################### Starting array c with zeros
 c_numba = np.zeros((N, N), np.uint32)
 
+#################### Launch Numba CPU version
 start_cpu = time.time()
 add_matrices_parallel(a_cpu, b_cpu, c_numba)
-cpu_time = time.time() - start_cpu
+end_cpu = time.time()
+cpu_time = end_cpu - start_cpu
 
+#################### Print result
 print("Elapsed time using CPU parallel numba for-loop (sec): ", cpu_time)
 print("---------------------")
 
-#################### Validation
+#################### Implement and print validation
 dif = np.sum(c_gpu_res != c_numba)
 print("Validation: there are %d different element(s)!" % dif)
 print("---------------------")

@@ -19,16 +19,6 @@ a_gpu = cuda.mem_alloc(a_cpu.nbytes)
 b_gpu = cuda.mem_alloc(b_cpu.nbytes)
 c_gpu = cuda.mem_alloc(c_cpu.nbytes) 
 
-#################### Start GPU timing
-start_gpu = cuda.Event()
-end_gpu = cuda.Event()
-start_gpu.record()
-
-#################### Transfer data from CPU to GPU
-cuda.memcpy_htod(a_gpu, a_cpu)
-cuda.memcpy_htod(b_gpu, b_cpu)
-cuda.memcpy_htod(c_gpu, c_cpu)
-
 #################### Write a GPU kernel
 module = SourceModule(""" 
 	__global__ void addition(int* a_gpu, int* b_gpu, int* c_gpu, int N){
@@ -40,6 +30,16 @@ module = SourceModule("""
 	}
 
 """)
+
+#################### Start GPU timing
+start_gpu = cuda.Event()
+end_gpu = cuda.Event()
+start_gpu.record()
+
+#################### Transfer data from CPU to GPU
+cuda.memcpy_htod(a_gpu, a_cpu)
+cuda.memcpy_htod(b_gpu, b_cpu)
+cuda.memcpy_htod(c_gpu, c_cpu)
 
 #################### Grid and Block size
 block_size = 512
@@ -56,7 +56,7 @@ cuda.memcpy_dtoh(c_cpu, c_gpu)
 end_gpu.record()
 cuda.Context.synchronize()
 gpu_time = start_gpu.time_till(end_gpu)*1e-3
-print("Elapsed time using GPU (sec): ", gpu_time)
+print("Elapsed on GPU with PyCuda (sec): ", gpu_time)
 print("---------------------")
 
 #################### Sequential addition
@@ -66,7 +66,7 @@ for i in range(N):
 	c_seq[i] = a_cpu[i] + b_cpu[i]
 end_cpu = time.time()
 cpu_time = end_cpu - start_cpu
-print("Elapsed time using sequential for-loop (sec): ", cpu_time)
+print("Elapsed time using CPU sequential for-loop (sec): ", cpu_time)
 print("---------------------")
 
 #################### Validation

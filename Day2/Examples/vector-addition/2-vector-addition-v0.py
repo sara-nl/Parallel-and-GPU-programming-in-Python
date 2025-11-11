@@ -1,5 +1,5 @@
-#Vector Addition with Pycuda(GPU) and Numba(CPU)
-# Import and Initialize PyCUDA, numpy, time, and numba
+#Vector Addition with Pycuda(GPU) and Numpy(CPU). Optimized in/out.
+# Import and Initialize PyCUDA, numpy, and numba
 import pycuda.driver as cuda
 import pycuda.autoinit
 from pycuda.compiler import SourceModule
@@ -15,15 +15,10 @@ a_cpu = np.random.uniform(1.0, 100.0, size=(N)).astype(np.uint32)
 b_cpu = np.random.uniform(1.0, 100.0, size=(N)).astype(np.uint32)
 c_cpu = np.zeros(N, np.uint32)
 
-#################### Start GPU timing
-start_gpu = cuda.Event()
-end_gpu = cuda.Event()
-start_gpu.record()
-
 #################### Allocate some space on GPU/DEVICE 
 a_gpu = cuda.mem_alloc(a_cpu.nbytes)
 b_gpu = cuda.mem_alloc(b_cpu.nbytes)
-c_gpu = cuda.mem_alloc(c_cpu.nbytes) 
+c_gpu = cuda.mem_alloc(c_cpu.nbytes)
 
 #################### Write GPU kernel
 module = SourceModule(""" 
@@ -37,6 +32,16 @@ module = SourceModule("""
     
 """)
 
+#################### Start GPU timing
+start_gpu = cuda.Event()
+end_gpu = cuda.Event()
+start_gpu.record()
+
+#################### Transfer data from CPU to GPU
+cuda.memcpy_htod(a_gpu, a_cpu)
+cuda.memcpy_htod(b_gpu, b_cpu)
+cuda.memcpy_htod(c_gpu, c_cpu)
+
 #################### Grid and Block size
 block_size = 512
 grid_size = int(np.ceil(N/block_size))
@@ -44,6 +49,9 @@ grid_size = int(np.ceil(N/block_size))
 #################### Launch the GPU kernel
 func = module.get_function("addition")
 func(a_gpu, b_gpu, c_gpu, np.uint32(N), grid=(grid_size, 1, 1), block=(block_size, 1, 1))
+
+#################### Transfer data from GPU to CPU
+cuda.memcpy_dtoh(c_cpu, c_gpu)
 
 #################### End GPU timing
 end_gpu.record()

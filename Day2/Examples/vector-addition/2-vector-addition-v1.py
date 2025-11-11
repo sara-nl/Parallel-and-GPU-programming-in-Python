@@ -15,11 +15,6 @@ a_cpu = np.random.uniform(1.0, 100.0, size=(N)).astype(np.uint32)
 b_cpu = np.random.uniform(1.0, 100.0, size=(N)).astype(np.uint32)
 c_cpu = np.zeros(N, np.uint32)
 
-#################### Start GPU timing
-start_gpu = cuda.Event()
-end_gpu = cuda.Event()
-start_gpu.record()
-
 #################### Write GPU kernel
 module = SourceModule(""" 
     __global__ void addition(int* a_gpu, int* b_gpu, int* c_gpu, int N){
@@ -31,6 +26,11 @@ module = SourceModule("""
     }
     
 """)
+
+#################### Start GPU timing
+start_gpu = cuda.Event()
+end_gpu = cuda.Event()
+start_gpu.record()
 
 #################### Grid and Block size
 block_size = 512

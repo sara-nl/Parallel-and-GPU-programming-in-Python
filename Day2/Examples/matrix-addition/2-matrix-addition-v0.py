@@ -1,9 +1,11 @@
-#Matrix Addition with Pycuda(GPU) and Numpy(CPU).
+#Matrix Addition with Pycuda(GPU) and Numba(CPU)
 # Import and Initialize PyCUDA
 import pycuda.driver as cuda
 import pycuda.autoinit
 from pycuda.compiler import SourceModule
 import numpy as np
+from numba import njit, prange
+
 import time 
 
 #################### Array size
@@ -49,7 +51,6 @@ grid_size = int(np.ceil(N/block_size))
 
 #################### Launch the GPU kernel
 func = module.get_function("addition")
-#func(a_cpu,b_cpu, c_cpu, np.uint32(N), grid=(grid_size, grid_size, 1), block=(block_size, block_size, 1))
 func(a_gpu, b_gpu, c_gpu, np.uint32(N), grid=(grid_size, grid_size, 1), block=(block_size, block_size, 1))
 
 #################### Transfer data from GPU to CPU
@@ -59,26 +60,32 @@ cuda.memcpy_dtoh(c_cpu, c_gpu)
 end_gpu.record()
 cuda.Context.synchronize()
 gpu_time = start_gpu.time_till(end_gpu)*1e-3
-print("Elapsed on GPU with PyCuda (sec): ", gpu_time)
+print("Elapsed time using GPU (sec): ", gpu_time)
 print("---------------------")
 
-#################### Sequential addition
-c_seq = np.zeros((N,N), np.uint32)
+#################### Numba parallel addition
+#################### Function definition
+@njit(parallel=True)
+def add_matrices_parallel(a, b, c):
+	for i in prange(N):
+		for j in prange(N):
+			c[i,j]=a[i,j]+b[i,j]
+	return c
+
+#################### Starting array c with zeros
+c_numba=np.zeros((N,N), np.uint32)
+
+#################### Launch Numba parallel function and time it
 start_cpu = time.time()
-for i in range(N):
-	for j in range(N):
-		c_seq[i][j] = a_cpu[i][j] + b_cpu[i][j]
+add_matrices_parallel(a_cpu,b_cpu,c_numba)
 end_cpu = time.time()
 cpu_time = end_cpu - start_cpu
-print("Elapsed time using CPU sequential for-loop (sec): ", cpu_time)
+#################### Print result
+print("Elapsed time using CPU parallel numba for-loop (sec): ", cpu_time)
 print("---------------------")
 
-#################### Validation
-dif = 0
-for i in range(N):
-	for j in range(N):
-		if(c_cpu[i][j] != c_seq[i][j]):
-			dif += 1
-print ("Validation: there are %d different element(s)!" %dif)
+#################### Implement and print validation
+dif = np.sum(c_cpu != c_numba)
+print("Validation: there are %d different element(s)!" % dif)
 print("---------------------")
 
