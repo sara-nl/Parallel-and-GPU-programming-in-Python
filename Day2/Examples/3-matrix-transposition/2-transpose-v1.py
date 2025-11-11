@@ -1,21 +1,19 @@
+#Vector Addition with Pycuda(GPU) and Numba(CPU)
 # Import and Initialize PyCUDA
 import pycuda.driver as cuda
 import pycuda.autoinit
 from pycuda.compiler import SourceModule
 import numpy as np
 import time
+from numba import njit, prange
 
 #################### Array size
 N = 4000
 
-#################### CPU allocation and iitialization
+# Create some space on CPU/HOST (random 32-bit ints)
 a_cpu = np.random.uniform(1, 100, size=(N, N)).astype(np.uint32)
 c_cpu = np.zeros((N, N), np.uint32)
 
-#################### Satrt GPU timing
-start_gpu = cuda.Event()
-end_gpu = cuda.Event()
-start_gpu.record()
 
 #################### Write a kernel
 mod = SourceModule("""
@@ -36,37 +34,48 @@ mod = SourceModule("""
 
 """)
 
-#################### Launch the GPU kernel
-func = mod.get_function("transpose")
+#################### Start GPU timing
+start_gpu = cuda.Event()
+end_gpu = cuda.Event()
+start_gpu.record()
+
+#################### Grid and Block size
 block_size = 32
 grid_size = int(np.ceil(N/block_size))
+
+#################### Launch the GPU kernel
+func = mod.get_function("transpose")
 func(cuda.In(a_cpu), cuda.Out(c_cpu), np.uint32(N), grid=(grid_size , grid_size, 1), block=(block_size , block_size, 1))
 
 #################### End GPU timing
 end_gpu.record()
 cuda.Context.synchronize()
 gpu_time = start_gpu.time_till(end_gpu)*1e-3
-print("Elapsed time using GPU (sec): ", gpu_time)
+print("Elapsed on GPU with PyCuda (sec): ", gpu_time)
 print("---------------------")
 
-#################### Sequential version
-c_seq = np.zeros((N, N), np.uint32)
+#################### Numba CPU parallel transposition
+@njit(parallel=True)
+def transpose_numba(a, c):
+    for i in prange(N):
+        for j in prange(N):
+            c[i, j] = a[j, i]
+    return c
+
+#################### Starting array c with zeros
+c_numba = np.zeros((N, N), np.uint32)
+
+#################### Launch Numba CPU version
 start_cpu = time.time()
-for i in range(N):
-    for j in range(N):
-        c_seq[i][j] = a_cpu[j][i]
+transpose_numba(a_cpu, c_numba)
 end_cpu = time.time()
 cpu_time = end_cpu - start_cpu
-print("Elapsed time using CPU (sec): ", cpu_time)
+
+#################### Print result
+print("Elapsed time using CPU parallel numba for-loop (sec): ", cpu_time)
 print("---------------------")
 
-#################### Validation
-dif = 0
-for s in range(N):
-    for t in range(N):
-        if(c_cpu[s][t] != c_seq[s][t]):
-            dif += 1
-
-print("Validation: there are %d different element(s)!" %dif)
+#################### Implement and print validation
+dif = np.sum(c_cpu != c_numba)
+print("Validation: there are %d different element(s)!" % dif)
 print("---------------------")
-

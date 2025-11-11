@@ -26,14 +26,15 @@ a_gpu = cuda.to_device(a_cpu.reshape(-1))
 b_gpu = cuda.to_device(b_cpu.reshape(-1))
 c_gpu = cuda.device_array(a_cpu.size, dtype=np.uint32)
 
-#################### Start GPU timing
-start_gpu = time.time()
-
 #################### Launch Numba CUDA kernel
 block_size = 32
 grid_size = ( (N + block_size - 1) // block_size,
               (N + block_size - 1) // block_size )
 
+#################### Start GPU timing
+start_gpu = time.time()
+
+#################### Launch GPU kernel and time it
 addition[grid_size, (block_size, block_size)](a_gpu, b_gpu, c_gpu, N)
 
 cuda.synchronize()
@@ -42,7 +43,7 @@ gpu_time = time.time() - start_gpu
 #################### Copy back and reshape
 c_gpu_res = c_gpu.copy_to_host().reshape(N, N)
 
-print("Elapsed time using GPU (sec): ", gpu_time)
+print("Elapsed time using GPU Numba (sec): ", gpu_time)
 print("---------------------")
 
 #################### Numba parallel CPU addition
