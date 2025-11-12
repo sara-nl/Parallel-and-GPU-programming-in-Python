@@ -1,5 +1,5 @@
-#Vector Addition with Pycuda(GPU) and Numba(CPU)
-# Import and Initialize PyCUDA
+# Matrix transpose with pycuda(GPU) and numba (CPU)
+# Import and initialize pycuda, numpy, numba, and time
 import pycuda.driver as cuda
 import pycuda.autoinit
 from pycuda.compiler import SourceModule

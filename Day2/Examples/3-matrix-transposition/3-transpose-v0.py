@@ -1,5 +1,5 @@
-#Vector Addition with Pycuda(GPU) and Numba(CPU)
-# Import and Initialize PyCUDA
+# Matrix transpose with numba(GPU) and numba(CPU)
+# Import and initialize numpy, numba, and time
 import numpy as np
 import time
 from numba import cuda, njit, prange

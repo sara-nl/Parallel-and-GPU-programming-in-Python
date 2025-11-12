@@ -1,5 +1,5 @@
-# Matrix Addition with Numba CUDA (GPU) and Numba (CPU)
-# Import and Initialize numpy, time, and numba
+# Matrix addition with numba CUDA (GPU) and numba (CPU)
+# Import and initialize numpy, time, and numba
 import numpy as np
 import time
 from numba import cuda, njit, prange

@@ -1,9 +1,11 @@
-# Import and Initialize PyCUDA
-import pycuda.driver as cuda
+# Matrix multiplication with pycuda(GPU) and numba(CPU), optimized in/out.
+# Import and initialize pycuda, numpy, numba and time
 import pycuda.autoinit
 from pycuda.compiler import SourceModule
 import numpy as np
 import time 
+from numba import njit, prange
+
 
 #################### Array size
 N = 400
@@ -13,7 +15,7 @@ a_cpu = np.random.uniform(1.0, 100.0, size=(N,N)).astype(np.uint32)
 b_cpu = np.random.uniform(1.0, 100.0, size=(N,N)).astype(np.uint32)
 c_cpu = np.zeros((N,N), np.uint32)
 
-#################### Satrt GPU timing
+#################### Start GPU timing
 start_gpu = cuda.Event()
 end_gpu = cuda.Event()
 start_gpu.record()
@@ -46,20 +48,31 @@ func(cuda.In(a_cpu), cuda.In(b_cpu), cuda.Out(c_cpu), np.uint32(N), grid=(grid_s
 end_gpu.record()
 cuda.Context.synchronize()
 gpu_time = start_gpu.time_till(end_gpu)*1e-3
-print("Elapsed time using GPU (sec): ", gpu_time)
+print("Elapsed time using PyCuda GPU (sec): ", gpu_time)
 print("---------------------")
 
-#################### Sequesntial multiplication
-c_seq = np.zeros((N,N), np.uint32)
-start_cpu_seq = time.time()
-for i in range(N):
-	for j in range(N):
-		for k in range(N):
-			c_seq[i][j] += a_cpu[i][k] * b_cpu[k][j]
-end_cpu_seq = time.time()
-cpu_time_seq = end_cpu_seq - start_cpu_seq
-print("Elapsed time using sequential for-loop (sec): ", cpu_time_seq)
+@njit(parallel=True)
+def multiplication_numba(a, b, c):
+	for i in prange(N): 				# parallelized outer loop
+		for j in range(N):
+			tmp = 0
+			for k in range(N):
+				tmp += a[i, k] * b[k, j]
+			c[i, j] = tmp
+	return c
+
+c_numba=np.zeros((N,N), np.uint32)
+
+#################### Launch Numba parallel function and time it
+start_cpu = time.time()
+multiplication_numba(a_cpu,b_cpu,c_numba)
+end_cpu = time.time()
+cpu_time = end_cpu - start_cpu
+
+#################### Print result
+print("Elapsed time using CPU parallel numba (sec): ", cpu_time)
 print("---------------------")
+
 
 #################### Numpy multiplication
 '''
@@ -83,7 +96,7 @@ print("---------------------")
 dif = 0
 for i in range(N):
 	for j in range(N):
-		if(c_cpu[i][j] != c_seq[i][j]):
+		if(c_cpu[i][j] != c_numba[i][j]):
 			dif += 1
 print ("Validation: there are %d different element(s)!" %dif)
 print("---------------------")

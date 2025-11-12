@@ -1,5 +1,5 @@
-#Vector Addition with Numba(GPU) and Numba(CPU)
-# Import and Initialize numpy, numba, and time
+# Vector addition with numba(GPU) and numba(CPU)
+# Import and initialize numpy, numba, and time
 import numpy as np
 import time
 from numba import njit, prange, cuda

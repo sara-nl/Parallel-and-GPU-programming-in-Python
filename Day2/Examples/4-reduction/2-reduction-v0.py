@@ -1,4 +1,5 @@
-# Import and Initialize PyCUDA
+# Vector addition with pycuda(GPU) and numba(CPU), optimized in/out.
+# Import and initialize pycuda, numpy, numba, and time
 import pycuda.driver as cuda
 import pycuda.autoinit
 from pycuda.compiler import SourceModule
@@ -6,6 +7,7 @@ import numpy as np
 import time 
 from functools import reduce
 from operator import add
+from numba import njit, prange
 
 #################### Array size
 N = 1024
@@ -53,15 +55,23 @@ print("Elapsed time using GPU (sec): ", gpu_time)
 print("total: ", a_cpu[0])
 print("---------------------")
 
-#################### Sequesntial reduction
-total_seq = 0
-start_cpu_seq = time.time()
-for num in b_cpu:
-	total_seq += num
-end_cpu_seq = time.time()
-cpu_time_seq = end_cpu_seq - start_cpu_seq
-print("Elapsed time using sequential for-loop (sec): ", cpu_time_seq)
-print("total: ", total_seq)
+#################### Numba CPU parallel reduction
+
+@njit(parallel=True)
+def reduce_parallel(a):
+    t = 0
+    # prange automatically distributes iterations among threads
+    for i in prange(N):
+        t += a[i]
+    return t
+
+#################### Launch Numba CPU version
+start_cpu = time.time()
+total = reduce_parallel(b_cpu)
+end_cpu = time.time()
+cpu_time = end_cpu - start_cpu
+print("Elapsed time using numba CPU(sec): ", cpu_time)
+print("total: ", total)
 print("---------------------")
 
 #################### Reduce operator 

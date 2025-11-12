@@ -1,5 +1,5 @@
-#Matrix Addition with Pycuda(GPU) and Numba(CPU)
-# Import and Initialize PyCUDA
+# Matrix addition with pycuda(GPU) and numba(CPU)
+# Import and initialize pycuda, numpy, numba, and time
 import pycuda.driver as cuda
 import pycuda.autoinit
 from pycuda.compiler import SourceModule
@@ -64,7 +64,6 @@ print("Elapsed time using GPU (sec): ", gpu_time)
 print("---------------------")
 
 #################### Numba parallel addition
-#################### Function definition
 @njit(parallel=True)
 def add_matrices_parallel(a, b, c):
 	for i in prange(N):
