@@ -7,7 +7,7 @@ import numpy as np
 import time 
 
 #################### Array size
-N = 10000000
+N = 100000
 
 # Create some space on CPU/HOST (random 32-bit ints)
 a_cpu = np.random.uniform(1.0, 100.0, size=(N)).astype(np.uint32) 
